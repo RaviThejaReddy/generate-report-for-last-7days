@@ -19,7 +19,7 @@ Resources:
   OutputS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Sub "cost-explorer-report-bucket-${Environment}"
+      BucketName: !Sub "cost-explorer-report-bucket-${AWS::AccountId}-${AWS::Region}-${Environment}"
       PublicAccessBlockConfiguration:
         BlockPublicAcls: false
         BlockPublicPolicy: false
