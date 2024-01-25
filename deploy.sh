@@ -1,0 +1,3 @@
+pip3 install -r python-module-layers/requirements.txt -t ./python-module-layers/python/
+sam package -t template.yaml --s3-bucket internal-projects-assets --s3-prefix generate-report-for-last-7days --output-template-file package.yaml --profile <profilename> --region <region>
+sam deploy -t package.yaml   --s3-bucket internal-projects-assets --s3-prefix generate-report-for-last-7days --stack-name generate-report-for-last-7days --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND --parameter-overrides Environment=dev --profile <profilename> --region <region>

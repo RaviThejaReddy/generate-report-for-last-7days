@@ -1,0 +1,41 @@
+Transform: AWS::Serverless-2016-10-31
+Description: Q1
+
+Parameters:
+  Environment:
+    Type: String
+
+Resources:
+  PythonModuleLayers:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      CompatibleRuntimes:
+        - python3.9
+      ContentUri: ./python-module-layers/
+      Description: python-module-layers
+      LayerName: !Sub "python-module-layers-${Environment}"
+      RetentionPolicy: Delete
+
+  OutputS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "cost-explorer-report-bucket-${Environment}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      VersioningConfiguration:
+        Status: Enabled
+      Tags:
+        - Key: Environment
+          Value: !Ref Environment
+
+  GenerateReportFor7Days:
+    Type: "AWS::CloudFormation::Stack"
+    Properties:
+      TemplateURL: generate-report-for-last-7days/template.yaml
+      Parameters:
+        PythonModuleLayers: !Ref PythonModuleLayers
+        Environment: !Ref Environment
+        OutputS3Bucket: !Ref OutputS3Bucket
